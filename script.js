@@ -15,6 +15,15 @@ const Cookies = {
     return d;
   },
   /**
+   * Simple function for retrieving all cookies.
+   * @return    {array}     Array of cookies set in browser.
+   */
+  getCookies: function() {
+    // Array of cookies
+    var cookies = document.cookie.split('; ');
+    return cookies;
+  },
+  /**
    * Set a new cookie to browser.
    * @param  {string}     name      Name of new cookie.
    * @param  {string}     value     Value for new cookie.
@@ -24,13 +33,14 @@ const Cookies = {
    */
   setCookie: function(name, value, expire, page) {
 
-    this.name = name;
-    this.value = value;
-    this.expire = expire;
-    this.page = page;
+    this.name       = name;
+    this.value      = value;
+    this.expire     = expire;
+    this.page       = page;
 
     if(!name && !value) {
       console.error( this.error.message = 'You didn\'t specified cookie name or value!' );
+      return;
     }
 
     if(expire) {
@@ -46,7 +56,48 @@ const Cookies = {
       page = 'path=/';
     }
 
-    document.cookie = name + '=' + value + ';' + 'expires=' + expire + ';' + page;
+    document.cookie = name + '=' + value + ';expires=' + expire + ';' + page + ';';
+
+  },
+  /**
+   * Remove existing cookie from browser.
+   * @param     {string}    name    Name of cookie to delete.
+   * @return    {}                  No return, function just delete existing cookie.
+   */
+  destroyCookie: function(name) {
+
+    this.name = name;
+
+    // Param name is required. No name? No fun!
+    if(!name) {
+      console.error( this.error.message = 'You didn\'t specified cookie name!' );
+      return;
+    }
+    else {
+      // Retrieve cookies in arr
+      var cookies   = this.getCookies(),
+          loop      = true,
+          i         = 0;
+      // Loop trough them and find that right cookie.
+      // Triple chocolate is the best one, btw.
+      while(loop) {
+        var cookie        = cookies[i],
+            cookieName    = cookie.split('=')[0],
+            cookieValue   = cookie.split('=')[1];
+
+        // Got it? Kill it, Anakin.
+        if(cookieName === name) {
+          document.cookie = cookieName + '=' + cookieValue + ';expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+          loop = false;
+        }
+        // Or just repeat.
+        else {
+          i++;
+        }
+
+      }
+
+    }
 
   }
 
