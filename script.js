@@ -1,4 +1,4 @@
-const Cookies = (function() {
+const Cookienator = (function() {
   // New Error message.
   var error = new Error();
   /**
