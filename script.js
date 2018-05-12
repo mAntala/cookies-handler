@@ -96,7 +96,7 @@ const Cookienator = (function() {
     this.name     = name;
     this.value    = value;
     if(!name && !value || !name || !value) {
-      console.log( error.message = 'You didn\'t specified cookie name or new value!' );
+      console.error( error.message = 'You didn\'t specified cookie name or new value!' );
       return;
     }
     else {
@@ -135,12 +135,39 @@ const Cookienator = (function() {
       }
     }
   }
+  /**
+   * Function to change expiration time of some cookie.
+   * @param  {string}     name      Name of cookie.
+   * @param  {integer}    expire    New expiration time (days) for cookie.
+   * @return {}                     It will change expiration day.
+   */
+  var changeExpTime = function(name, expire) {
+    this.name = name;
+    this.time = expire;
+    if(!name || !expire) {
+      console.log( error.message = 'You didn\'t specified cookie name or expiration time!' );
+      return;
+    }
+    else {
+      var cookies = getCookies();
+      for(var i in cookies) {
+        var cookie = cookies[i],
+            cookieName = cookie.split('=')[0],
+            cookieValue = cookie.split('=')[1];
+        if(cookieName === name) {
+          destroyCookie(name);
+          setCookie(name, cookieValue, time);
+        }
+      }
+    }
+  }
 
   return {
 
     setCookie: setCookie,
     destroyCookie: destroyCookie,
     changeCookie: changeCookie,
+    changeExpTime: changeExpTime,
     getCookie: getCookie
 
   }
